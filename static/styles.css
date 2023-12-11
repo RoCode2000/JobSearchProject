@@ -185,8 +185,8 @@ body {
 
   #cardtext{
     font-size: 20px;
-    padding-left: 0px;
-    float: left;
+    padding-top: 10px;
+    float: center;
     align-items: center; 
   }
 
@@ -203,3 +203,19 @@ body {
     -webkit-box-orient: vertical;
   }
   
+  textarea {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: auto;
+  }
+
+  .detailimg img{
+    width: 10%;
+    aspect-ratio: 3/2;
+    object-fit: contain;
+
+    padding-bottom: 15px;
+
+    float: right;
+  }

@@ -10,6 +10,14 @@
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
 
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('textarea').each(function() {
+                $(this).height($(this).prop('scrollHeight'));
+            });
+        });
+  </script>
   <title>Job Listings</title>
 </head>
 
@@ -21,7 +29,7 @@
       <img src="/static/jobicon.ico" class="logo" href="/">
       <nav>
         <ul>
-          <li><a href="/">HOME 2 TEST GIT</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="#">Browse Job</a></li>
           <li><a href="#">Saved Jobs</a></li>
           <li><a href="#">About us</a></li>
