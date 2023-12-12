@@ -10,14 +10,20 @@ import string
 
 
 
+
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-
+from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 
 
 
 # Configure application
 app = Flask(__name__)
+
+
+
+
 
 # Custom filter
 
@@ -36,12 +42,9 @@ def index():
     if request.method == "POST":
         url = "https://jsearch.p.rapidapi.com/search"
         datefilter = request.form.get("dateFilter")
-        countryfilter = request.form.get("locationFilter")
+        
         certfilter = request.form.get("certFilter")
         query = request.form.get("job-search")
-
-        if not countryfilter == "all":
-            query = query + countryfilter
 
         if not query:
             return render_template("index.html", placeholder = "Please enter a job")

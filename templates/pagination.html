@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <h1>Server-Side Paginated Responses</h1>
+    {% for response in responses %}
+        <p>{{ response.content }}</p>
+    {% endfor %}
+
+    <div class="pagination">
+        <span>Page {{ request.args.get('page', 1) }}</span>
+        <a href="{{ url_for('index', page=responses.next_page) }}">Next</a>
+    </div>
+{% endblock %}
