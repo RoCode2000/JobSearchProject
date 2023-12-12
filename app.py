@@ -13,9 +13,7 @@ import string
 
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-
 
 
 # Configure application
@@ -77,6 +75,13 @@ def index():
         if not responsedata:
             return render_template("index.html")
         
+
+
+
+
+
+
+
         certfilterres = []
         
         print(certfilter)
