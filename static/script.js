@@ -1,43 +1,49 @@
-// Add an event listener for input changes
-document.getElementById('job-search').addEventListener('input', function() {
-    // Get the search query from the input field
-    const searchQuery = this.value;
-    // Fetch suggestions from the server based on the search query
-    fetch(`/api/suggestions?query=${searchQuery}`)
-      .then(response => response.json())
-      .then(suggestions => {
-        // Update the UI with the suggestions
-        updateSuggestionsUI(suggestions);
-      })
-      .catch(error => {
-        console.error('Error fetching suggestions:', error);
-      });
-  });
-  
-  function updateSuggestionsUI(suggestions) {
-    // Update the UI to display the suggestions
-    const suggestionsContainer = document.getElementById('suggestions-container');
-    suggestionsContainer.innerHTML = '';
-  
-    if (suggestions.length === 0) {
-      suggestionsContainer.style.display = 'none'; // hide the container if no suggestions
-      return;
+let thisPage = 1;
+let limit = 10;
+let list = document.querySelectorAll('.list .item');
+
+function loadItem(){
+    let beginGet = limit * (thisPage - 1);
+    let endGet = limit * thisPage - 1;
+    list.forEach((item, key)=>{
+        if(key >= beginGet && key <= endGet){
+            item.style.display = 'block';
+        }else{
+            item.style.display = 'none';
+        }
+    })
+    listPage();
+}
+loadItem();
+function listPage(){
+    let count = Math.ceil(list.length / limit);
+    document.querySelector('.listPage').innerHTML = '';
+
+    if(thisPage != 1){
+        let prev = document.createElement('li');
+        prev.innerText = 'PREV';
+        prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+        document.querySelector('.listPage').appendChild(prev);
     }
-  
-    suggestionsContainer.style.display = 'block';
-  
-    // Create and append suggestion items to the container
-    suggestions.forEach(suggestion => {
-      const suggestionItem = document.createElement('div');
-      suggestionItem.textContent = suggestion;
-      suggestionItem.addEventListener('click', function() {
-        // Set the selected suggestion as the search query
-        document.getElementById('job-search').value = suggestion;
-        // Hide the suggestions container
-        suggestionsContainer.style.display = 'none';
-        // Trigger the search function
-        searchJobs();
-      });
-      suggestionsContainer.appendChild(suggestionItem);
-    });
-  }
+
+    for(i = 1; i <= count; i++){
+        let newPage = document.createElement('li');
+        newPage.innerText = i;
+        if(i == thisPage){
+            newPage.classList.add('active');
+        }
+        newPage.setAttribute('onclick', "changePage(" + i + ")");
+        document.querySelector('.listPage').appendChild(newPage);
+    }
+
+    if(thisPage != count){
+        let next = document.createElement('li');
+        next.innerText = 'NEXT';
+        next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+        document.querySelector('.listPage').appendChild(next);
+    }
+}
+function changePage(i){
+    thisPage = i;
+    loadItem();
+}
