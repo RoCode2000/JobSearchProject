@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 
 {% block main %}
+<!--script type="text/javascript" {{ url_for('static', filename='script.js')}}></script>
+  <script type="text/javascript">
+     var myVar = myFunc({{responses}})
+</script-->
 
 <form action="/" method="post">
   <div class="center">
@@ -25,7 +29,7 @@
       <option value="month">This Month</option>
       <!-- Add more options as needed -->
     </select>
-    
+
     <label>Filter by Location:</label>
     <select id="locationFilter" name="locationFilter">
       <option value=" singapore">Singapore</option>
@@ -88,6 +92,8 @@
     <li>3</li>
     <li>4</li>
   </ul>
+
+
 
 </section>
 

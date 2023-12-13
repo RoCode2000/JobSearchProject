@@ -2,6 +2,8 @@ let thisPage = 1;
 let limit = 10;
 let list = document.querySelectorAll('.list .item');
 
+
+
 function loadItem(){
     let beginGet = limit * (thisPage - 1);
     let endGet = limit * thisPage - 1;
@@ -35,15 +37,16 @@ function listPage(){
         newPage.setAttribute('onclick', "changePage(" + i + ")");
         document.querySelector('.listPage').appendChild(newPage);
     }
-
-    if(thisPage != count){
+    if(thisPage < count){
         let next = document.createElement('li');
         next.innerText = 'NEXT';
         next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
         document.querySelector('.listPage').appendChild(next);
     }
+    
 }
 function changePage(i){
     thisPage = i;
     loadItem();
 }
+

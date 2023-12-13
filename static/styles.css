@@ -235,7 +235,50 @@ select {
     background-color: #B192EF;
     color: #fff;
   }
-
+  .listPage li:hover{
+    background-color: grey;
+  }
+  
   .center {  
     padding: 10px;
+  }
+
+
+  .containerpage{
+    position: relative;
+    height: 20vh;
+    width: 100%;
+    background: #ffff;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .containerpage .listPage {
+    position: relative;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    border-radius: 2px;
+  }
+  .containerpage .listPage li {
+    list-style-type: none;
+    display: inline-block;
+  }
+  .containerpage .listPage li a {
+    position: relative;
+    padding: 20px 25px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+  }
+  .containerpage .listPage li a:hover,
+  .containerpage .listPage li.active a {
+    background: rgba(255, 255, 255, 0.2);
   }
