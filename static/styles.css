@@ -183,102 +183,107 @@ select {
   align-items: center;
 }
 
-.cardimage img{
-    width: 50%;
-    aspect-ratio: 3/2;
-    object-fit: contain;
-    
-    padding-left: 20px;
-    float: left;
-  }
-  
-  #description{
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-             line-clamp: 2; 
-    -webkit-box-orient: vertical;
-  }
-  
-  textarea {
-    border: none;
-    outline: none;
-    width: 100%;
-    height: auto;
-  }
+.cardimage img {
+  width: 50%;
+  aspect-ratio: 3/2;
+  object-fit: contain;
 
-  .detailimg img{
-    width: 10%;
-    aspect-ratio: 3/2;
-    object-fit: contain;
+  padding-left: 20px;
+  float: left;
+}
 
-    padding-bottom: 15px;
+#description {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* number of lines to show */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 
-    float: right;
-  }
+textarea {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: auto;
+}
 
-  .listPage{
-    padding: 10px;
-    text-align: center;
-    list-style: none;
-  }
+.detailimg img {
+  width: 10%;
+  aspect-ratio: 3/2;
+  object-fit: contain;
 
-  .listPage li{
-    background-color: #ffffffBD;
-    padding: 20px;
-    display: inline-block;
-    margin: 0 10px;
-    cursor: pointer;
-  }
+  padding-bottom: 15px;
 
-  .listPage .active{
-    background-color: #B192EF;
-    color: #fff;
-  }
-  .listPage li:hover{
-    background-color: grey;
-  }
-  
-  .center {  
-    padding: 10px;
-  }
+  float: right;
+}
+
+.listPage {
+  padding: 10px;
+  text-align: center;
+  list-style: none;
+}
+
+.listPage li {
+  background-color: #ffffffBD;
+  padding: 20px;
+  display: inline-block;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.listPage .active {
+  background-color: #B192EF;
+  color: #fff;
+}
+
+.listPage li:hover {
+  background-color: grey;
+}
+
+.center {
+  padding: 10px;
+}
 
 
-  .containerpage{
-    position: relative;
-    height: 20vh;
-    width: 100%;
-    background: #ffff;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.containerpage {
+  position: relative;
+  height: 20vh;
+  width: 100%;
+  background: #ffff;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .containerpage .listPage {
-    position: relative;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(3px);
-    border-radius: 2px;
-  }
-  .containerpage .listPage li {
-    list-style-type: none;
-    display: inline-block;
-  }
-  .containerpage .listPage li a {
-    position: relative;
-    padding: 20px 25px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 500;
-  }
-  .containerpage .listPage li a:hover,
-  .containerpage .listPage li.active a {
-    background: rgba(255, 255, 255, 0.2);
-  }
+.containerpage .listPage {
+  position: relative;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  border-radius: 2px;
+}
+
+.containerpage .listPage li {
+  list-style-type: none;
+  display: inline-block;
+}
+
+.containerpage .listPage li a {
+  position: relative;
+  padding: 20px 25px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+}
+
+.containerpage .listPage li a:hover,
+.containerpage .listPage li.active a {
+  background: rgba(255, 255, 255, 0.2);
+}
