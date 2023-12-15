@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
+<section id="container">
     <div id="container-left">
             <h1>{{jobdetail.job_title}}</h1>
             <div class ="detailimg">
@@ -8,6 +9,12 @@
             </div>
             <h2 style="padding-top:20px";>Job Details:</h2>
             <textarea readonly name="message" wrap="hard"  >{{des}}</textarea>
+            <div>
+                <h3 style="padding-top: 20px;">Links to Apply:</h3>
+                {% for link in jobdetail.apply_options %}
+                    <p><a href="{{link.apply_link}}">{{link.publisher}}</a></p>
+                {% endfor %}
+            </div>
     </div>
     <div id="container-right">
         <div>
@@ -15,7 +22,7 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
     </div> 
-
+</section>
 {% endblock %}
 
 
