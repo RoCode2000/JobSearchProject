@@ -216,7 +216,7 @@ textarea {
 }
 
 .detailimg img {
-  width: 10%;
+  width: 20%;
   aspect-ratio: 3/2;
   object-fit: contain;
 

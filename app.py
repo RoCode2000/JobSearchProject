@@ -7,6 +7,8 @@ import subprocess
 import urllib
 import uuid
 import string
+import wikipedia
+import re
 
 
 
@@ -20,7 +22,26 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 
+def add_newline_with_bullet(input_string, bullet='•'):
+    # Define a regular expression to identify potential names
+    name_pattern = re.compile(r'\b[A-Z][a-z]*\b')
 
+    # Find all potential names in the string
+    potential_names = re.findall(name_pattern, input_string)
+
+    # Replace periods with \n and bullet, excluding those in names
+    modified_string = input_string
+    for name in potential_names:
+        modified_string = modified_string.replace(f'{name}.', f'{name}REPLACEME')
+
+    # Replace periods not in names with \n and bullet, excluding the last period
+    modified_string = re.sub(r'\.\s(?!$)', f'.\n{bullet} ', modified_string)
+
+    # Restore periods in names
+    for name in potential_names:
+        modified_string = modified_string.replace(f'{name}REPLACEME', f'{name}.')
+
+    return modified_string
 
 
 # Custom filter
@@ -88,7 +109,7 @@ def index():
 
         certfilterres = []
         
-        print(certfilter)
+        
 
         if certfilter == "ite":
             print("ite filter")
@@ -151,6 +172,20 @@ def jobdetails():
     
     for i in jobdetailinfo:
         des = i["job_description"].translate(str.maketrans('', '',))
-
+        if i["employer_company_type"]:
+            companyname = i["employer_name"] + " " + i["employer_company_type"] + " company " + i["job_country"]
+        else:
+            companyname = i["employer_name"]+ " company " + i["job_country"]
     
-    return render_template("jobdetails.html", jobdetail = jobdetailinfo[0], des = des)
+    
+    try:
+        companydes = wikipedia.page(companyname)
+        companydes = companydes.summary
+        companydes = add_newline_with_bullet(companydes)
+        
+    except:
+        companydes = "Company Not Found In Wikipedia"
+
+    print(companyname)
+
+    return render_template("jobdetails.html", jobdetail = jobdetailinfo[0], des = des, companydes = companydes)
