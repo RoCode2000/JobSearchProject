@@ -67,26 +67,34 @@
     <div class="list">
       <div class="item">
         <div class="card">
-          <div class="cardimage">
-            <img src={{response.employer_logo}} alt="Company Logo">
+
+          <div class="firstCardCol"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div class="cardimage" style=" width: 100%; height: auto;">
+              <img src={{response.employer_logo}} alt="Company Logo">
+            </div>
+            <p style="font-size: 10px; align-self: flex-end; padding:5px; width: 100%; text-align: left;">Via:
+              {{response.job_publisher}}</p>
           </div>
-          <div id="cardtext" class="text-center ">
+
+          <div id="cardtext" class="text-center secondCardCol">
             <a style=>{{response.job_title}}</a>
             <p>{{response.employer_name}}</p>
             <p style="font-size: 15px">{{response.job_country}}</p>
           </div>
-          <div id="cardtext">
+          <div id="cardtext" class="thirdCardCol">
             <p>Company type: {{response.employer_company_type}}</p>
             <p>Employment type: {{response.job_employment_type}}</p>
           </div>
 
-          <div>
-            <select style="visibility: hidden" id="job_id" name="job_id">
+          <div class="fourthCardCol">
+            <select style="display: none" id="job_id" name="job_id">
               <option selected="selected" value={{response.job_id}}>{{response.job_id}}</option>
             </select>
             <button id='jobdetail' type="submit">Job Details</button>
           </div>
-          <p style="font-size: 10px; align-self: flex-end; padding:5px">Via: {{response.job_publisher}}</p>
+
+
         </div>
       </div>
     </div>
