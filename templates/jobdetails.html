@@ -3,26 +3,24 @@
 {% block main %}
 <section id="container">
     <div id="container-left">
-            <h1>{{jobdetail.job_title}}</h1>
-            <div class ="detailimg">
-                <img src= {{jobdetail.employer_logo}} alt="Company Logo">
-            </div>
-            <h2 style="padding-top:20px";>Job Details:</h2>
-            <textarea readonly name="message" wrap="hard"  >{{des}}</textarea>
-            <div>
-                <h3 style="padding-top: 20px;">Links to Apply:</h3>
-                {% for link in jobdetail.apply_options %}
-                    <p><a href="{{link.apply_link}}">{{link.publisher}}</a></p>
-                {% endfor %}
-            </div>
+        <h1>{{jobdetail.job_title}}</h1>
+        <div class="detailimg">
+            <img src={{jobdetail.employer_logo}} alt="Company Logo">
+        </div>
+        <h2 style="padding-top:20px" ;>Job Details:</h2>
+        <textarea readonly name="message" wrap="hard">{{des}}</textarea>
+        <div>
+            <h3 style="padding-top: 20px;">Links to Apply:</h3>
+            {% for link in jobdetail.apply_options %}
+            <p><a href="{{link.apply_link}}">{{link.publisher}}</a></p>
+            {% endfor %}
+        </div>
     </div>
     <div id="container-right">
         <div>
             <h3>Company description:</h3>
-            <textarea readonly name="message" wrap="hard"  >{{companydes}}</textarea>
+            <textarea readonly name="message" wrap="hard">{{companydes}}</textarea>
         </div>
-    </div> 
+    </div>
 </section>
 {% endblock %}
-
-
