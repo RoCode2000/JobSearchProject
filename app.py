@@ -9,18 +9,29 @@ import uuid
 import string
 import wikipedia
 import re
-
+import sqlite3
 
 
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 # Configure application
 app = Flask(__name__)
 
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 def add_newline_with_bullet(input_string, bullet='•'):
     # Define a regular expression to identify potential names
@@ -53,9 +64,108 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-##db = SQL("sqlite:///finance.db")
+db = sqlite3.connect("jobsearch.db")
 
 responsedata = []
+
+
+def login_required(f):
+    """
+    Decorate routes to require login.
+
+    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
+    """
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            flash('Invalid username or password. Please try again.', 'error')
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            flash('Invalid username or password. Please try again.', 'error')
+
+        # Query database for username
+        rows = db.execute(
+            "SELECT * FROM users WHERE username = ?", request.form.get("username")
+        )
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(
+            rows[0]["hash"], request.form.get("password")
+        ):
+            flash('Invalid username or password. Please try again.', 'error')
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirmation = request.form.get("confirmation")
+        if not username:
+            flash('Please enter username. Please try again.', 'error')
+        if not password:
+            flash('Please enter password. Please try again.', 'error')
+        if not confirmation:
+            flash('Please enter confirmation password. Please try again.', 'error')
+        if password != confirmation:
+            flash('Invalid username or password. Please try again.', 'error')
+        dbusername = db.execute(
+            "SELECT username FROM users where username = ?", username
+        )
+        if len(dbusername) >= 1:
+            flash('Username already exists. Please try again.', 'error')
+        hashpassword = generate_password_hash(password, method="pbkdf2", salt_length=16)
+        db.execute(
+            "INSERT INTO users (username, hash) VALUES(?, ?)", username, hashpassword
+        )
+        userid = db.execute("SELECT * FROM users WHERE username = ?", username)
+        session["user_id"] = userid[0]["id"]
+        return redirect("/login")
+    else:
+        return render_template("register.html")
+
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -189,3 +299,18 @@ def jobdetails():
     print(companyname)
 
     return render_template("jobdetails.html", jobdetail = jobdetailinfo[0], des = des, companydes = companydes)
+
+
+
+@app.route("/savedjobs")
+def savedjobs():
+    jobid = db.execute("SELECT jobid from users WHERE id = ?", session["user_id"])
+    if not jobid:
+        return redirect("/savedjobs")
+    
+    joblist = []
+    for i in jobid:
+        joblistinfo = db.execute("SELECT * from jobinfo WHERE userid = ?", i)
+        joblist = joblist + joblistinfo
+    
+    return render_template("savedjobs.html", joblist = joblist)

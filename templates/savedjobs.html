@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+{% for job in joblist %}
+    <ul>
+        <li>job.title</li>
+        <li>job.employername</li>
+        <li>job.jobemployment</li>
+    </ul>
+{% endfor %}
+
+
+
+
+{% endblock %}
