@@ -13,11 +13,12 @@ import sqlite3
 
 
 
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for, g
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 
@@ -54,6 +55,18 @@ def add_newline_with_bullet(input_string, bullet='•'):
 
     return modified_string
 
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(app.config['DATABASE'], detect_types=sqlite3.PARSE_DECLTYPES)
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+
 
 # Custom filter
 
@@ -62,9 +75,10 @@ def add_newline_with_bullet(input_string, bullet='•'):
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+app.config['DATABASE'] = 'jobsearch.db'
 
 # Configure CS50 Library to use SQLite database
-db = sqlite3.connect("jobsearch.db")
+db = sqlite3.connect(app.config['DATABASE'])
 
 responsedata = []
 
@@ -94,6 +108,8 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        db = get_db()
+        cursor = db.cursor()
         # Ensure username was submitted
         if not request.form.get("username"):
             flash('Invalid username or password. Please try again.', 'error')
@@ -103,7 +119,7 @@ def login():
             flash('Invalid username or password. Please try again.', 'error')
 
         # Query database for username
-        rows = db.execute(
+        rows = cursor.execute(
             "SELECT * FROM users WHERE username = ?", request.form.get("username")
         )
 
@@ -141,6 +157,8 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        db = get_db()
+        cursor = db.cursor()
         if not username:
             flash('Please enter username. Please try again.', 'error')
         if not password:
@@ -149,22 +167,24 @@ def register():
             flash('Please enter confirmation password. Please try again.', 'error')
         if password != confirmation:
             flash('Invalid username or password. Please try again.', 'error')
-        dbusername = db.execute(
+        dbusername = cursor.execute(
             "SELECT username FROM users where username = ?", username
         )
+        dbusername = cursor.fetchall()
         if len(dbusername) >= 1:
             flash('Username already exists. Please try again.', 'error')
         hashpassword = generate_password_hash(password, method="pbkdf2", salt_length=16)
-        db.execute(
+        cursor.execute(
             "INSERT INTO users (username, hash) VALUES(?, ?)", username, hashpassword
         )
-        userid = db.execute("SELECT * FROM users WHERE username = ?", username)
+        userid = cursor.execute("SELECT * FROM users WHERE username = ?", username)
         session["user_id"] = userid[0]["id"]
         return redirect("/login")
     else:
         return render_template("register.html")
 
-
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
