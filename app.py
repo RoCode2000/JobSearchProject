@@ -112,6 +112,7 @@ def login():
         cursor = db.cursor()
         # Ensure username was submitted
         if not request.form.get("username"):
+            flash('Please enter a username', 'error')
             return render_template("login.html")
 
         # Ensure password was submitted
