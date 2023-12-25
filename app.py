@@ -112,27 +112,25 @@ def login():
         cursor = db.cursor()
         # Ensure username was submitted
         if not request.form.get("username"):
-            flash('Invalid username or password. Please try again.', 'error')
+            return render_template("login.html")
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            flash('Invalid username or password. Please try again.', 'error')
+            return render_template("login.html")
 
         # Query database for username
-        rows = cursor.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
-        )
-
+        rows = cursor.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash"], request.form.get("password")
         ):
-            flash('Invalid username or password. Please try again.', 'error')
+            return render_template("login.html")
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
+        cursor.close()
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -160,25 +158,22 @@ def register():
         db = get_db()
         cursor = db.cursor()
         if not username:
-            flash('Please enter username. Please try again.', 'error')
+            return render_template("register.html")
         if not password:
-            flash('Please enter password. Please try again.', 'error')
+            return render_template("register.html")
         if not confirmation:
-            flash('Please enter confirmation password. Please try again.', 'error')
+            return render_template("register.html")
         if password != confirmation:
-            flash('Invalid username or password. Please try again.', 'error')
-        dbusername = cursor.execute(
-            "SELECT username FROM users where username = ?", username
-        )
-        dbusername = cursor.fetchall()
+            return render_template("register.html")
+        dbusername = cursor.execute("SELECT username FROM users WHERE username = ?", (username,)).fetchall()
         if len(dbusername) >= 1:
-            flash('Username already exists. Please try again.', 'error')
+            return render_template("register.html")
         hashpassword = generate_password_hash(password, method="pbkdf2", salt_length=16)
-        cursor.execute(
-            "INSERT INTO users (username, hash) VALUES(?, ?)", username, hashpassword
-        )
-        userid = cursor.execute("SELECT * FROM users WHERE username = ?", username)
+        cursor.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, hashpassword))
+        db.commit()
+        userid = cursor.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
         session["user_id"] = userid[0]["id"]
+        cursor.close()
         return redirect("/login")
     else:
         return render_template("register.html")
