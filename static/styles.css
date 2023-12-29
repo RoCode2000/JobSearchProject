@@ -161,6 +161,15 @@ select {
   margin-bottom: 30px;
 }
 
+/* .card {
+  transition: 0.3s;
+  margin: 20px 10px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 10px;
+} */
+
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
