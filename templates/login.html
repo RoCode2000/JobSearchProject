@@ -8,14 +8,14 @@
                 <i class="bi bi-box-arrow-in-right" style="font-size: 2rem; color: #007bff;"></i>
                 <h3 class="mt-2">Login</h3>
             </div>
-            <form>
+            <form action="/login" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="username" required>
+                    <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" id="password" required>
+                    <input type="password" class="form-control" id="password" name="password" required>
                 </div>
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="rememberMe">
