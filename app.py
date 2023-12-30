@@ -330,3 +330,7 @@ def savedjobs():
         joblist = joblist + joblistinfo
     
     return render_template("savedjobs.html", joblist = joblist)
+
+@app.route("/about")
+def aboutus():
+    return render_template("about.html")
