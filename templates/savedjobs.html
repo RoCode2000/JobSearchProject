@@ -2,15 +2,67 @@
 
 {% block main %}
 
-{% for job in joblist %}
-    <ul>
-        <li>job.title</li>
-        <li>job.employername</li>
-        <li>job.jobemployment</li>
+
+<section id="card">
+    <!-- Results will be displayed here -->
+    {% for job in joblist %}
+    <form action="/jobdetails" method="get">
+      <div class="list">
+        <div class="item">
+          <div class="card" style="  transition: 0.3s;
+          margin: 20px 10px;
+          display: grid;
+          align-items: center;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+          column-gap: 10px;
+          ">
+  
+            <div class="firstCardCol"
+              style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px;">
+              <div class="cardimage" style=" width: 100%; height: auto;">
+                <img src={{job.logo}} alt="Company Logo">
+              </div>
+              <p style="font-size: 10px; align-self: flex-end; padding:5px; width: 100%; text-align: left;">Via:
+                {{job.publisher}}</p>
+            </div>
+  
+            <div id="cardtext" class="text-center secondCardCol" style="padding-right: 50px;">
+              <a style="font-weight: bold;">{{job.jobtitle}}</a>
+              <p>{{job.employer}}</p>
+              <p style="font-size: 15px">{{job.country}}</p>
+            </div>
+            <div id="cardtext" class="thirdCardCol">
+              <p>Company type: {{job.companytype}}</p>
+              <p>Employment type: {{job.employmentype}}</p>
+            </div>
+  
+            <div class="fourthCardCol text-center">
+              
+              <select style="display: none" id="job_id" name="job_id">
+                <option selected="selected" value={{job.jobid}}>{{job.jobid}}</option>
+              </select>
+              <button id='jobdetail' type="submit">Job Details</button>
+            </div>
+  
+            
+  
+          </div>
+        </div>
+      </div>
+    
+    {% endfor %}
+  
+    <ul class="listPage">
+      <li class="active">1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
     </ul>
-{% endfor %}
-
-
-
 
 {% endblock %}

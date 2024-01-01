@@ -10,6 +10,7 @@ import string
 import wikipedia
 import re
 import sqlite3
+import pandas as pd
 
 
 
@@ -66,7 +67,25 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
+def sql_data_to_list_of_dicts(path_to_db, select_query):
+      """Returns data from an SQL query as a list of dicts."""
+      try:
+          con = sqlite3.connect(path_to_db)
+          con.row_factory = sqlite3.Row
+          things = con.execute(select_query).fetchall()
+          unpacked = [{k: item[k] for k in item.keys()} for item in things]
+          return unpacked
+      except Exception as e:
+          print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
+          return []
+      finally:
+          con.close()
 
 # Custom filter
 
@@ -173,6 +192,7 @@ def register():
         cursor.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, hashpassword))
         db.commit()
         userid = cursor.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchall()
+        print(userid)
         session["user_id"] = userid[0]["id"]
         cursor.close()
         return redirect("/login")
@@ -318,17 +338,55 @@ def jobdetails():
 
 
 
-@app.route("/savedjobs")
+@app.route("/savedjobs", methods=["GET", "POST"])
+@login_required
 def savedjobs():
-    jobid = db.execute("SELECT jobid from users WHERE id = ?", session["user_id"])
-    if not jobid:
-        return redirect("/savedjobs")
+    db = get_db()
+    cursor = db.cursor()
+    db.row_factory = sqlite3.Row
+    if request.method == "POST":
+        jobdetailinfo = []
+        jobid = request.form.get("job_id")
+        global responsedata
+        for i in responsedata:
+            if i["job_id"] == jobid:
+                jobdetailinfo.append(i)
+        existing_record = cursor.execute("SELECT * FROM joblist2 WHERE userid = ? AND jobid = ?", (session["user_id"], jobid)).fetchone()
+
+        if existing_record:
+            return render_template("index.html", placeholder = "Already in saved jobs")
+        else:
+            # Proceed with the insertion
+            cursor.execute("INSERT INTO joblist2 (userid, jobid) VALUES(?, ?)", (session["user_id"], jobid))
+            db.commit()
+        
+        existing_record = cursor.execute("SELECT * FROM jobindex WHERE jobid = ?", (jobid,)).fetchall()
+        if existing_record:
+            return redirect("/savedjobs")
+        else:
+            # Proceed with the insertion
+            for i in jobdetailinfo:
+                cursor.execute("INSERT INTO jobindex (jobid, publisher, employer, country, companytype, employmentype, description, jobtitle, logo) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", (jobid, i["job_publisher"], i["employer_name"], i["job_city"], i["employer_company_type"], i["job_employment_type"], i["job_description"], i["job_title"], i["employer_logo"]))
+                db.commit()
+
+    jobid = cursor.execute("SELECT jobid FROM joblist2 WHERE userid = ?", (session["user_id"],)).fetchall()
+    jobidlist = []
+    for row in jobid:
+        # Access data by column name (assuming row_factory is sqlite3.Row)
+
+        # Or access data by column index
+        jobidlist.append(row[0])
+
+    if not jobidlist:
+        return render_template("savedjobs.html",  placeholder = "No Saved Jobs Found")
+    joblist=[]
+    for i in jobidlist:
+        joblistinfo = cursor.execute("SELECT * from jobindex WHERE jobid = ?", (i,)).fetchall()
+        joblist.append(joblistinfo[0])
+
     
-    joblist = []
-    for i in jobid:
-        joblistinfo = db.execute("SELECT * from jobinfo WHERE userid = ?", i)
-        joblist = joblist + joblistinfo
-    
+    print(joblist)
+    cursor.close()
     return render_template("savedjobs.html", joblist = joblist)
 
 @app.route("/about")

@@ -71,7 +71,8 @@
         display: grid;
         align-items: center;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        column-gap: 10px;">
+        column-gap: 10px;
+        ">
 
           <div class="firstCardCol"
             style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px;">
@@ -82,8 +83,8 @@
               {{response.job_publisher}}</p>
           </div>
 
-          <div id="cardtext" class="text-center secondCardCol">
-            <a style=>{{response.job_title}}</a>
+          <div id="cardtext" class="text-center secondCardCol" style="padding-right: 50px;">
+            <a style="font-weight: bold;">{{response.job_title}}</a>
             <p>{{response.employer_name}}</p>
             <p style="font-size: 15px">{{response.job_country}}</p>
           </div>
@@ -92,18 +93,29 @@
             <p>Employment type: {{response.job_employment_type}}</p>
           </div>
 
-          <div class="fourthCardCol">
+          <div class="fourthCardCol text-center">
+            
             <select style="display: none" id="job_id" name="job_id">
               <option selected="selected" value={{response.job_id}}>{{response.job_id}}</option>
             </select>
             <button id='jobdetail' type="submit">Job Details</button>
+            <div class="spacing">
+            </form>
+              <form action="/savedjobs" method="post">
+                <select style="display: none" id="job_id" name="job_id">
+                  <option selected="selected" value={{response.job_id}}>{{response.job_id}}</option>
+                </select>
+                <button id='savedjob' type="submit">Save Job</button>
+              </form>
+            </div>
           </div>
 
+          
 
         </div>
       </div>
     </div>
-  </form>
+  
   {% endfor %}
 
   <ul class="listPage">
@@ -111,6 +123,12 @@
     <li>2</li>
     <li>3</li>
     <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+    <li>9</li>
+    <li>10</li>
   </ul>
 
 
