@@ -414,3 +414,5 @@ def removejob():
             db.commit()
     cursor.close()
     return redirect("/savedjobs")
+
+

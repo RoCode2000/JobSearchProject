@@ -50,3 +50,20 @@ function changePage(i){
     loadItem();
 }
 
+
+let toastBox = document.getElementById('toastBox')
+
+function showToast(){
+    let toast = document.createElement('div');
+    toast.classList.add('toast');
+    toast.innerHTML = 'success';
+    toastBox.appendChild(toast);
+
+}
+
+
+function myFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
