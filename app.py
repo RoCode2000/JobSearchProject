@@ -392,3 +392,25 @@ def savedjobs():
 @app.route("/about")
 def aboutus():
     return render_template("about.html")
+
+
+@app.route("/removejob", methods=["GET", "POST"])
+@login_required
+def removejob():
+    db = get_db()
+    cursor = db.cursor()
+    db.row_factory = sqlite3.Row
+    if request.method == "POST":
+        jobid = request.form.get("job_id")
+        existing_record_joblist = cursor.execute("SELECT * FROM joblist2 WHERE userid = ? AND jobid = ?", (session["user_id"], jobid)).fetchone()
+        
+        if existing_record_joblist:
+            cursor.execute("DELETE FROM joblist2 WHERE userid = ? AND jobid = ?", (session["user_id"], jobid))
+            db.commit()
+        existing_record_jobindex = cursor.execute("SELECT * FROM joblist2 WHERE jobid = ?", (jobid,)).fetchall()
+
+        if len(existing_record_jobindex) == 0:
+            cursor.execute("DELETE FROM jobindex WHERE jobid = ?", (jobid,))
+            db.commit()
+    cursor.close()
+    return redirect("/savedjobs")

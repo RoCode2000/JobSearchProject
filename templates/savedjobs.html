@@ -42,6 +42,15 @@
                 <option selected="selected" value={{job.jobid}}>{{job.jobid}}</option>
               </select>
               <button id='jobdetail' type="submit">Job Details</button>
+              <div class="spacing">
+              </form>
+                <form action="/removejob" method="post">
+                  <select style="display: none" id="job_id" name="job_id">
+                    <option selected="selected" value={{job.jobid}}>{{job.jobid}}</option>
+                  </select>
+                  <button id='removejob' type="submit">Remove Job</button>
+                </form>
+              </div>
             </div>
   
             
