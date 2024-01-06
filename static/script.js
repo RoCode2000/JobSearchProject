@@ -62,8 +62,26 @@ function showToast(){
 }
 
 
-function myFunction() {
-  var x = document.getElementById("snackbar");
-  x.className = "show";
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-}
+function showSnackbar() {
+    var x = document.getElementById("snackbar");
+    x.classList.add("show");
+    // Store the snackbar state in local storage
+    localStorage.setItem('snackbarVisible', 'true');
+  }
+  
+  // Check if the snackbar should be visible on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    var x = document.getElementById("snackbar");
+    var isVisible = localStorage.getItem('snackbarVisible');
+    if (isVisible === 'true') {
+      x.classList.add("show");
+    }
+  });
+  
+  // Hide the snackbar after 3 seconds
+  setTimeout(function() {
+    var x = document.getElementById("snackbar");
+    x.classList.remove("show");
+    // Clear the snackbar state in local storage
+    localStorage.removeItem('snackbarVisible');
+  }, 3000);
