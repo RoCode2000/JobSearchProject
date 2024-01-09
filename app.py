@@ -123,7 +123,8 @@ def login():
     """Log user in"""
 
     # Forget any user_id
-    session.clear()
+    if session:
+        session.clear()
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
@@ -154,7 +155,7 @@ def login():
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("login.html")
+        return render_template("login.html", placeholder = "testing")
 
 @app.route("/logout")
 def logout():
@@ -251,7 +252,7 @@ def index():
 
 
 
-
+        global certfilterres
         certfilterres = []
         
         
@@ -353,7 +354,7 @@ def savedjobs():
         existing_record = cursor.execute("SELECT * FROM joblist2 WHERE userid = ? AND jobid = ?", (session["user_id"], jobid)).fetchone()
 
         if existing_record:
-            return render_template("index.html", placeholder = "Already in saved jobs")
+            return render_template("index.html", placeholder = "Already in saved jobs",  responses = certfilterres)
         else:
             # Proceed with the insertion
             cursor.execute("INSERT INTO joblist2 (userid, jobid) VALUES(?, ?)", (session["user_id"], jobid))
@@ -367,6 +368,8 @@ def savedjobs():
             for i in jobdetailinfo:
                 cursor.execute("INSERT INTO jobindex (jobid, publisher, employer, country, companytype, employmentype, description, jobtitle, logo) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", (jobid, i["job_publisher"], i["employer_name"], i["job_city"], i["employer_company_type"], i["job_employment_type"], i["job_description"], i["job_title"], i["employer_logo"]))
                 db.commit()
+
+        return render_template("index.html", responses = certfilterres, placeholder = "Saved succesfully")
 
     jobid = cursor.execute("SELECT jobid FROM joblist2 WHERE userid = ?", (session["user_id"],)).fetchall()
     jobidlist = []
@@ -384,8 +387,6 @@ def savedjobs():
         joblistinfo = cursor.execute("SELECT * from jobindex WHERE jobid = ?", (i,)).fetchall()
         joblist.append(joblistinfo[0])
 
-    
-    print(joblist)
     cursor.close()
     return render_template("savedjobs.html", joblist = joblist, placeholder = "Saved succesfully")
 
