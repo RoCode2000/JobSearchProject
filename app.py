@@ -131,12 +131,11 @@ def login():
         cursor = db.cursor()
         # Ensure username was submitted
         if not request.form.get("username"):
-            flash('Please enter a username', 'error')
-            return render_template("login.html")
+            return render_template("login.html", placeholder = "Please enter the username")
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return render_template("login.html")
+            return render_template("login.html", placeholder = "Please enter the password")
 
         # Query database for username
         rows = cursor.execute("SELECT * FROM users WHERE username = ?", (request.form.get("username"),)).fetchall()
@@ -144,7 +143,7 @@ def login():
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash"], request.form.get("password")
         ):
-            return render_template("login.html")
+            return render_template("login.html", placeholder = "Please try again")
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -178,16 +177,16 @@ def register():
         db = get_db()
         cursor = db.cursor()
         if not username:
-            return render_template("register.html")
+            return render_template("register.html", placeholder = "Please enter a username")
         if not password:
-            return render_template("register.html")
+            return render_template("register.html", placeholder = "Please enter a password")
         if not confirmation:
-            return render_template("register.html")
+            return render_template("register.html", placeholder = "Please enter both the password")
         if password != confirmation:
-            return render_template("register.html")
+            return render_template("register.html", placeholder = "Please make sure both the password is the same")
         dbusername = cursor.execute("SELECT username FROM users WHERE username = ?", (username,)).fetchall()
         if len(dbusername) >= 1:
-            return render_template("register.html")
+            return render_template("register.html", placeholder = "User already registered")
         hashpassword = generate_password_hash(password, method="pbkdf2", salt_length=16)
         cursor.execute("INSERT INTO users (username, hash) VALUES(?, ?)", (username, hashpassword))
         db.commit()
@@ -379,6 +378,7 @@ def savedjobs():
 
     if not jobidlist:
         return render_template("savedjobs.html",  placeholder = "No Saved Jobs Found")
+    global joblist
     joblist=[]
     for i in jobidlist:
         joblistinfo = cursor.execute("SELECT * from jobindex WHERE jobid = ?", (i,)).fetchall()
@@ -387,7 +387,7 @@ def savedjobs():
     
     print(joblist)
     cursor.close()
-    return render_template("savedjobs.html", joblist = joblist)
+    return render_template("savedjobs.html", joblist = joblist, placeholder = "Saved succesfully")
 
 @app.route("/about")
 def aboutus():
